@@ -36,7 +36,7 @@ Git Bash에서는 같은 폴더의 Windows python.exe를 실행할 수 있다. W
 
 1. `doctor`와 `accounts`를 실행해 Windows·Python·카카오톡과 계정 후보를 확인한다. 로그인 전이면 로그인하도록 안내한다. 여러 계정이면 사용자에게 선택을 받고 정확한 account_id를 사용한다.
 2. 아직 없는 필요한 설정만 확인한다: 조회할 방(전체 또는 정확한 이름)과 매시간 수집 사용 여부. 사용자가 이미 매시간 전체 조회를 요청했다면 다시 묻지 않는다.
-3. `setup --account ID --profile-file "<스킬폴더>/references/local-setup.json"`을 실행한다. 선택한 방은 `--room "정확한 방 이름"`을 반복한다. Windows 작업 스케줄러 사용을 별도로 요청했을 때만 `--hourly`를 붙인다. 기본 반복 실행은 Claude Code가 `scan`을 호출하는 방식이다. 예: `/loop 1h /kakao-windows scan을 실행하고 실패나 누락 상태가 바뀌면 알려 줘`. 열린 로컬 세션과 Claude Code 버전의 반복 제한을 확인한다. 기존 반복 작업이 있으면 중복 등록하지 않는다.
+3. `setup --account ID --profile-file "<스킬폴더>/references/local-setup.json"`을 실행한다. 선택한 방은 `--room <chat_id>`를 방마다 붙인다(방 이름 대신 `rooms` 결과의 숫자 `chat_id`를 쓴다). Windows 작업 스케줄러 사용을 별도로 요청했을 때만 `--hourly`를 붙인다. 기본 반복 실행은 Claude Code가 `scan`을 호출하는 방식이다. 예: `/loop 1h /kakao-windows scan을 실행하고 실패나 누락 상태가 바뀌면 알려 줘`. 열린 로컬 세션과 Claude Code 버전의 반복 제한을 확인한다. 기존 반복 작업이 있으면 중복 등록하지 않는다.
 4. `scan`으로 첫 수집을 하고 상태·누락 방을 설명한다. Claude Code의 반복 기능을 쓰는 경우 `scan`을 매시간 호출하도록 등록하고 실제 등록 결과를 확인한다. 스킬 파일만으로 반복이 시작되었다고 말하지 않는다. Windows 예약 방식을 선택한 경우에만 스케줄러가 로그인된 사용자 세션에서 매시간 실행한다. 카카오톡이 꺼지거나 PC가 잠들어 있으면 해당 시각의 완전한 수집을 보장하지 않는다.
 
 local-setup.json이 지정한 state_directory가 기본 경로와 다르면 모든 명령에 --state-dir을 전달한다. read/search/recover/rooms는 그 개인 설정의 계정·경로를 기본값으로 쓴다.
@@ -45,7 +45,7 @@ local-setup.json이 지정한 state_directory가 기본 경로와 다르면 모�
 
 ## 대화 읽기
 
-`read --since 2h --room "정확한 방 이름"`처럼 사용자가 지정한 범위만 조회한다. 개인 설정 범위가 기본이다. 사용자가 전체 방을 명시하면 --all-rooms로 이번 조회의 방 제한을 해제한다. 기본은 본인 발신을 제외한 수신이다. 발신 포함은 `--direction all`. 필요하면 `rooms`로 이름/ID를 확인한다. 같은 이름의 방이 여러 개면 ID를 선택한다.
+`read --since 2h --room <chat_id>`처럼 사용자가 지정한 범위만 조회한다. 방은 `rooms` 결과의 숫자 `chat_id`로 지정한다. 개인 설정 범위가 기본이다. 사용자가 전체 방을 명시하면 --all-rooms로 이번 조회의 방 제한을 해제한다. 기본은 본인 발신을 제외한 수신이다. 발신 포함은 `--direction all`. 필요하면 `rooms`로 이름/ID를 확인한다. 같은 이름의 방이 여러 개면 ID를 선택한다.
 
 키가 없으면 `recover` 또는 `read --since 2h --refresh-keys`를 실행한다. 첫 조회가 기록한 window_start/window_end를 후속 재시도에도 유지하려면 `--start ISO --end ISO`로 전환한다. 키를 찾는 동안 '최근' 범위를 계속 뒤로 밀지 않는다.
 
