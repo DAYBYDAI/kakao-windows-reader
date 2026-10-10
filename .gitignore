@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 개인 데이터: 절대 커밋하지 않는다
+skill/kakao-windows/references/
+local-setup.json
+*.dpapi
+*.sqlite3
+exports/
+scans/
+keys/
+
+# OS
+.DS_Store
+Thumbs.db
